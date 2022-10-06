@@ -17,14 +17,11 @@ function Calculator() {
     }
   }
 
-  useEffect(() => {
-    fetchCurrency();
-    console.log(currCurrency);
-  })
   // update currency every 30 seconds
   useEffect(() => {
     const intervalId = setInterval(async () => {
       fetchCurrency();
+      console.log(currCurrency);
     }, 30000);
     return () => clearInterval(intervalId);
   }, [])
