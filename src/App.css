@@ -4,13 +4,14 @@ body {
 }
 
 .cal-width {
-  width: 500px;
+  width: 420px;
 }
 
 .grey {
   color: #686868;
 }
 
-/* .new-line {
-  white
-} */
+input[type=number]::-webkit-inner-spin-button, 
+input[type=number]::-webkit-outer-spin-button { 
+  -webkit-appearance: none; 
+}
