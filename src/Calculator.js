@@ -19,16 +19,16 @@ function Calculator() {
   useEffect(() => {
     fetchCurrency();
     console.log("Exchange rate: " + rate);
-  })
+  }, [])
 
   // update currency every 15 seconds
-  useEffect(() => {
-    const intervalId = setInterval(() => {
-      fetchCurrency();
-      console.log("Exchange rate: " + rate);
-    }, 15000);
-    return () => clearInterval(intervalId);
-  }, [rate])
+  // useEffect(() => {
+  //   const intervalId = setInterval(() => {
+  //     fetchCurrency();
+  //     console.log("Exchange rate: " + rate);
+  //   }, 15000);
+  //   return () => clearInterval(intervalId);
+  // }, [rate])
 
   function format (number) {
     return number.toFixed(2);
@@ -46,10 +46,9 @@ function Calculator() {
 
   let topAmount, bottomAmount;
   if (isTop) {
-    bottomAmount = format(amount * rate);
-    
+    bottomAmount = format(amount * rate).toLocaleString();
   } else{
-    topAmount = format(amount / rate);
+    topAmount = format(amount / rate).toLocaleString();
   }
 
   return (
