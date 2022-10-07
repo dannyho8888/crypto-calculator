@@ -3,22 +3,26 @@ import Currency from './Currency'
 import ExchangeRate from './ExchangeRate'
 
 function Calculator() {
-  // const [amount, setAmount] = useState(1);
-  const [topAmount, setTopAmount] = useState(1);
-  const [bottomAmount, setBottomAmount] = useState(1);
+  const [amount, setAmount] = useState(1);
+  const [isTop, setIsTop] = useState(true);
   const [rate, setRate] = useState(150000);
+
+  const fetchCurrency = async () => {
+    try {
+      const res = await fetch("https://api.coindesk.com/v1/bpi/currentprice/HKD.json")
+      const data = await res.json();
+      setRate(data.bpi.HKD.rate_float);
+    } catch (e) {
+      console.log("Error when fetching data");
+    } 
+  }
+  useEffect(() => {
+    fetchCurrency();
+    console.log("Exchange rate: " + rate);
+  })
 
   // update currency every 15 seconds
   useEffect(() => {
-    const fetchCurrency = async () => {
-      try {
-        const res = await fetch("https://api.coindesk.com/v1/bpi/currentprice/HKD.json")
-        const data = await res.json();
-        setRate(data.bpi.HKD.rate_float);
-      } catch (e) {
-        console.log("Error when fetching data");
-      } 
-    }
     const intervalId = setInterval(() => {
       fetchCurrency();
       console.log("Exchange rate: " + rate);
@@ -26,28 +30,26 @@ function Calculator() {
     return () => clearInterval(intervalId);
   }, [rate])
 
-  // let topAmount, bottomAmount;
-
-  //make setState reflect immediately 
-  useEffect(() => {
-    setBottomAmount(topAmount * rate);
-  }, [topAmount])
-
-  useEffect(() => {
-    
-  }, [bottomAmount])
+  function format (number) {
+    return number.toFixed(2);
+  }
 
   function handleTopAmountChange(e) {
-    setTopAmount(e.target.value);
-    // topAmount = e.target.value;
-    // bottomAmount = topAmount * rate;
+    setAmount(e.target.value);
+    setIsTop(true);
   }
   
   function handleBottomAmountChange(e) {
-    setBottomAmount(e.target.value);
-    setTopAmount(bottomAmount / rate);
-    // bottomAmount = e.target.value;
-    // topAmount = bottomAmount / rate;
+    setAmount(e.target.value);
+    setIsTop(false);
+  }
+
+  let topAmount, bottomAmount;
+  if (isTop) {
+    bottomAmount = format(amount * rate);
+    
+  } else{
+    topAmount = format(amount / rate);
   }
 
   return (
